@@ -63,6 +63,16 @@ auto ChemicalProperties::update(VectorConstRef n_) -> void
         const auto npc = Composition(np);
         auto xp = rows(x, offset, offset, size, size);
         xp = npc/sum(npc);
+        if(size == 1) {
+            xp = 1.0;
+        }
+        else {
+            const auto snpc = sum(npc);
+            if(snpc != 0.0)
+                xp = npc/snpc;
+            else
+                xp = 0.0;
+        }
         offset += size;
     }
 }

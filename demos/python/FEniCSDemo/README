@@ -1,0 +1,4 @@
+Ensure that Pyreaktoro is installed or available on python path
+Database file is located in demos folder
+Output is located in results folder
+Tested on FEniCS relases 2019.1.0, 1st September 2019

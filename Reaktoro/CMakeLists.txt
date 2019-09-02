@@ -39,6 +39,8 @@ target_include_directories(Reaktoro
 target_link_libraries(Reaktoro
     PRIVATE ${THIRDPARTY_LIBS}
     PUBLIC Boost::boost)
+# Set compilation features to be propagated to dependent codes.
+target_compile_features(Reaktoro PUBLIC cxx_std_17)
 
 # Install Reaktoro C++ library
 install(TARGETS Reaktoro
@@ -60,7 +62,7 @@ endif()
 # Install Reaktoro header files
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/Reaktoro
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT headers
-    FILES_MATCHING PATTERN "*.hpp")
+    FILES_MATCHING PATTERN "*.hpp" PATTERN "*.hxx")
 
 # Install deps header files
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/Reaktoro/deps

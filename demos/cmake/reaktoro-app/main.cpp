@@ -6,7 +6,7 @@ int main()
     Database database("supcrt98.xml");
 
     ChemicalEditor editor(database);
-    editor.addAqueousPhase("H O C Na Cl");
+    editor.addAqueousPhaseWithElements("H O C Na Cl");
     editor.addGaseousPhase({"H2O(g)", "CO2(g)"});
     editor.addMineralPhase("Halite");
 
