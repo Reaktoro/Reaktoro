@@ -249,7 +249,8 @@ TransportSolver::TransportSolver()
 auto TransportSolver::initialize() -> void
 {
     const auto dx = mesh_.dx();
-    const auto beta = diffusion*dt/(dx * dx);
+    const auto alpha = diffusion*dt/(dx * dx);
+    const auto beta = velocity*dt/dx;
     const auto num_cells = mesh_.numCells();
     const auto icell0 = 0;
     const auto icelln = num_cells - 1;
@@ -257,18 +258,35 @@ auto TransportSolver::initialize() -> void
     A.resize(num_cells);
     phi.resize(num_cells);
 
+    // Initialize coefficients of the system's matrix
+    double a(0.0), b(0.0), c(0.0);
+
     // Assemble the coefficient matrix A for the interior cells
     for(Index icell = 1; icell < icelln; ++icell)
     {
+        // Full-implicit scheme
+        a = -beta - alpha;
+        b = 1 + beta + 2 * alpha;
+        c = -alpha;
+        /*
+         * Code for
+         * const auto beta = diffusion*dt/(dx * dx);
+         * const auto alpha = velocity*dt/dx;
         const double a = -beta;
         const double b = 1 + 2*beta;
         const double c = -beta;
+        */
         A.row(icell) << a, b, c;
     }
 
+    //  Full-implicit scheme
     // Assemble the coefficient matrix A for the boundary cells
-    A.row(icell0) << 0.0, 1.0 + 4.5*beta, -1.5*beta; // prescribed amount on the wall and approximatin deriveted by forward diference approximation with second order error
-    A.row(icelln) << -beta, 1.0 + beta, 0.0;   // du/dx = 0 at the right boundary
+    A.row(icell0) << 0.0, 1.0 + alpha + beta, -alpha;   // left boundary (flux = v * ul)
+    A.row(icelln) << - beta, 1.0 + beta, 0.0;           // right boundary (free)
+
+    // Assemble the coefficient matrix A for the boundary cells
+    //A.row(icell0) << 0.0, 1.0 + 4.5*beta, -1.5*beta; // prescribed amount on the wall and approximatin deriveted by forward diference approximation with second order error
+    //A.row(icelln) << -beta, 1.0 + beta, 0.0;   // du/dx = 0 at the right boundary
 
     // Factorize A into LU factors for future uses in method step
     A.factorize();
@@ -280,14 +298,20 @@ auto TransportSolver::step(VectorRef u, VectorConstRef q) -> void
     // Solving advection problem with time explicit approach
     const auto dx = mesh_.dx();
     const auto num_cells = mesh_.numCells();
-    const auto alpha = velocity*dt/dx;
+    const auto beta = velocity*dt/dx;
     const auto icell0 = 0;
     const auto icelln = num_cells - 1;
 
-    Assert(alpha <= 1, "Could not solve the advection problem explicitly.",
+    Assert(beta <= 1, "Could not solve the advection problem explicitly.",
         "alpha > 1, try to decrease time step ");
 
-    u0 = u;
+    // Full-implicit scheme to handle the left boundary cell
+    u[icell0] += beta * ul; // left boundary (flux = v * ul)
+
+    /*
+     * FluxLimitersImplicitExplicit
+
+     u0 = u;
 
     phi[0] = 2.0; //  this is very important to ensure correct flux limiting behavior for boundary cell.
 
@@ -318,7 +342,7 @@ auto TransportSolver::step(VectorRef u, VectorConstRef q) -> void
     u[icell0] += aux * alpha * (ul - u0[0]) + (3.0*diffusion*ul*dt/(dx*dx)); // prescribed amount on the wall and approximatin deriveted by forward diference approximation with second order error
 
     // Handle the right boundary cell
-    u[icelln] += alpha * (u0[icelln - 1] - u0[icelln]); // du/dx = 0 at the right boundary
+    u[icelln] += alpha * (u0[icelln - 1] - u0[icelln]); // du/dx = 0 at the right boundary*/
 
     // Add the source contribution
     u += dt * q;
@@ -369,7 +393,7 @@ auto ReactiveTransportSolver::output() -> ChemicalOutput
     return outputs.back();
 }
 
-auto ReactiveTransportSolver::initialize(const ChemicalField& field) -> void
+auto ReactiveTransportSolver::initialize() -> void
 {
     const Mesh& mesh = transportsolver.mesh();
     const Index num_elements = system_.numElements();

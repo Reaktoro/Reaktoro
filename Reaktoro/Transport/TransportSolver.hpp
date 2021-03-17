@@ -204,7 +204,7 @@ private:
 };
 
 /// A class for solving advection-diffusion problem.
-/// Eq: du/dt + v*du/dx = D*d²u/dx²
+/// Eq: du/dt + v*du/dx = D*dï¿½u/dxï¿½
 ///     u - amount
 ///     v - velocity
 ///     D - diffusion coefficient
@@ -298,7 +298,7 @@ public:
 
     auto output() -> ChemicalOutput;
 
-    auto initialize(const ChemicalField& field) -> void;
+    auto initialize() -> void;
 
     auto step(ChemicalField& field) -> void;
 
