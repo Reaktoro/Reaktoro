@@ -9,8 +9,15 @@ set(REAKTORO_SHARED_LIB ${PROJECT_NAME}${SUFFIX_SHARED_LIBS})
 set(REAKTORO_STATIC_LIB ${PROJECT_NAME}${SUFFIX_STATIC_LIBS})
 
 # Set the list of names of the third-party targets and libraries
-set(THIRDPARTY_TARGETS PUGIXML MINIZ CVODE PHREEQC GEMS)
-set(THIRDPARTY_LIBS pugixml miniz sundials_cvode sundials_nvecserial phreeqc gems nlohmann_json::nlohmann_json)
+set(THIRDPARTY_TARGETS PUGIXML MINIZ PHREEQC GEMS)
+set(THIRDPARTY_LIBS pugixml miniz phreeqc gems nlohmann_json::nlohmann_json)
+
+if(DEFINED REAKTORO_PATH_TO_CVODE)
+    list(APPEND THIRDPARTY_LIBS ${SUNDIALS_CVODE} ${SUNDIALS_NVECSERIAL})
+else()
+    list(APPEND THIRDPARTY_TARGETS CVODE)
+    list(APPEND THIRDPARTY_LIBS sundials_cvode sundials_nvecserial)
+endif()
 
 # Enable automatic creation of a module definition (.def) file for a SHARED library on Windows.
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
@@ -43,6 +50,11 @@ target_link_libraries(Reaktoro
 if(REAKTORO_USE_OPENLIBM)
     configure_target_to_use_openlibm(Reaktoro)
     target_compile_definitions(Reaktoro PUBLIC REAKTORO_USE_OPENLIBM=1)
+endif()
+
+if(REAKTORO_PATH_TO_CVODE)
+    target_include_directories(Reaktoro PRIVATE ${REAKTORO_PATH_TO_CVODE}/include)
+    message(${REAKTORO_PATH_TO_CVODE}/include)
 endif()
 
 # Link Reaktoro library against ThermoFun if found

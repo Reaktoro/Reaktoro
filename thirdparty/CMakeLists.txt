@@ -50,13 +50,15 @@ ExternalProject_Add(MINIZ
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/miniz
     CMAKE_ARGS ${REAKTORO_THIRDPARTY_COMMON_INSTALL_ARGS})
 
-# Build and install the cvode library
-ExternalProject_Add(CVODE
-    PREFIX build
-    URL ${CMAKE_CURRENT_SOURCE_DIR}/cvode/cvode-2.8.2.tar.gz
-    CMAKE_ARGS ${REAKTORO_THIRDPARTY_COMMON_INSTALL_ARGS}
-        -DEXAMPLES_ENABLE=OFF
-        -DEXAMPLES_INSTALL=OFF)
+    # Build and install the cvode library
+if(NOT DEFINED REAKTORO_PATH_TO_CVODE)
+    ExternalProject_Add(CVODE
+        PREFIX build
+        URL ${CMAKE_CURRENT_SOURCE_DIR}/cvode/cvode-2.8.2.tar.gz
+        CMAKE_ARGS ${REAKTORO_THIRDPARTY_COMMON_INSTALL_ARGS}
+            -DEXAMPLES_ENABLE=OFF
+            -DEXAMPLES_INSTALL=OFF)
+endif()
 
 # Build and install the Phreeqc library
 ExternalProject_Add(PHREEQC

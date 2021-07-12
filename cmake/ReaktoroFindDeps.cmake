@@ -15,6 +15,13 @@ if(ThermoFun_FOUND)
     add_compile_definitions(REAKTORO_USING_THERMOFUN)
 endif()
 
+if(REAKTORO_PATH_TO_CVODE)
+    find_library(SUNDIALS_CVODE sundials_cvode HINTS ${REAKTORO_PATH_TO_CVODE}/lib)
+    find_library(SUNDIALS_NVECSERIAL sundials_nvecserial HINTS ${REAKTORO_PATH_TO_CVODE}/lib)
+    message(SUNDIALS_CVODE = ${SUNDIALS_CVODE})
+    message(SUNDIALS_NVECSERIAL = ${SUNDIALS_NVECSERIAL})
+endif()
+
 # Find pybind11 library (if needed)
 if(REAKTORO_BUILD_PYTHON)
     find_package(pybind11 REQUIRED)
