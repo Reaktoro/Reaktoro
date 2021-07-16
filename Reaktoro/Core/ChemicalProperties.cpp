@@ -388,9 +388,29 @@ auto ChemicalProperties::phaseVolumes() const -> ChemicalVector
     return phaseAmounts() % phaseMolarVolumes();
 }
 
+auto ChemicalProperties::phaseInternalEnergies() const -> ChemicalVector
+{
+    return phaseAmounts() % phaseMolarInternalEnergies();
+}
+
+auto ChemicalProperties::phaseEnthalpies() const -> ChemicalVector
+{
+    return phaseAmounts() % phaseMolarEnthalpies();
+}
+
 auto ChemicalProperties::volume() const -> ChemicalScalar
 {
     return sum(phaseVolumes());
+}
+
+auto ChemicalProperties::internalEnergy() const -> ChemicalScalar
+{
+    return sum(phaseInternalEnergies());
+}
+
+auto ChemicalProperties::enthalpy() const -> ChemicalScalar
+{
+    return sum(phaseEnthalpies());
 }
 
 auto ChemicalProperties::subvolume(const Indices& iphases) const -> ChemicalScalar

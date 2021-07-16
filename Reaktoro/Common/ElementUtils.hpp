@@ -20,7 +20,7 @@
 // C++ includes
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 namespace Reaktoro {
 
@@ -30,7 +30,7 @@ auto elements() -> std::vector<std::string>;
 /// Determine. the elemental composition of a chemical compound.
 /// @param compound The formula of the chemical compound
 /// @return The elemental composition of the chemical compound
-auto elements(std::string formula) -> std::map<std::string, double>;
+auto elements(std::string formula) -> std::unordered_map<std::string, double>;
 
 /// Return the atomic mass of a chemical element (in units of kg/mol).
 /// @param element The symbol of the chemical element
@@ -40,7 +40,7 @@ auto atomicMass(std::string element) -> double;
 /// Calculate the molar mass of a chemical compound (in units of kg/mol).
 /// @param compound The elements and their stoichiometries that compose the chemical compound
 /// @return The molar mass of the chemical compound
-auto molarMass(const std::map<std::string, double>& compound) -> double;
+auto molarMass(const std::unordered_map<std::string, double>& compound) -> double;
 
 /// Calculate the molar mass of a chemical compound (in units of kg/mol).
 /// @param compound The formula of the chemical compound

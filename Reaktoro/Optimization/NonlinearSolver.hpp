@@ -111,6 +111,9 @@ struct NonlinearOptions
     /// The Armijo parameter used in the backtracking line search algorithm.
     double armijo = 1.0e-4;
 
+    /// The flag that indicates if backtracking line search algorithm is to be used.
+    bool linesearch = true;
+
     /// The options for the output of the non-linear problem calculation.
     NonlinearOutput output;
 };

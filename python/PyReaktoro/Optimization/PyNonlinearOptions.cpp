@@ -39,6 +39,7 @@ void exportNonlinearOptions(py::module& m)
         .def_readwrite("max_iterations", &NonlinearOptions::max_iterations)
         .def_readwrite("tau", &NonlinearOptions::tau)
         .def_readwrite("armijo", &NonlinearOptions::armijo)
+        .def_readwrite("linesearch", &NonlinearOptions::linesearch)
         .def_readwrite("output", &NonlinearOptions::output)
         ;
 }

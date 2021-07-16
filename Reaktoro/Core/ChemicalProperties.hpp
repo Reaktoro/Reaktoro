@@ -178,8 +178,20 @@ public:
     /// Return the volumes of the phases (in units of m3).
     auto phaseVolumes() const -> ChemicalVector;
 
+    /// Return the internal energies of the phases (in units of J).
+    auto phaseInternalEnergies() const -> ChemicalVector;
+
+    /// Return the enthalpies of the phases (in units of J).
+    auto phaseEnthalpies() const -> ChemicalVector;
+
     /// Return the volume of the system (in units of m3).
     auto volume() const -> ChemicalScalar;
+
+    /// Return the internal energy of the system (in units of J).
+    auto internalEnergy() const -> ChemicalScalar;
+
+    /// Return the enthalpy of the system (in units of J).
+    auto enthalpy() const -> ChemicalScalar;
 
     /// Return the total volume occupied by given phases (in units of m3).
     /// @param iphases The indices of the phases.

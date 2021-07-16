@@ -17,7 +17,12 @@
 
 #pragma once
 
+// C++ includes
+#include <vector>
+
 // Reaktoro includes
+#include <Reaktoro/Common/Index.hpp>
+#include <Reaktoro/Math/Matrix.hpp>
 #include <Reaktoro/Optimization/OptimumResult.hpp>
 
 namespace Reaktoro {
@@ -29,6 +34,22 @@ struct SmartEquilibriumResult
     bool succeeded = false;
 };
 
+/// A type used to describe the result of an inverse equilibrium calculation.
+struct InverseEquilibriumResult
+{
+    /// The number of forward equilibrium calculations in each inverse iteration.
+    std::vector<Index> fcep_iterations_per_icep_iteration;
+
+    /// The unknown variables *x* in each inverse iteration.
+    std::vector<Vector> x_per_icep_iteration;
+
+    /// The residual function *F* in each inverse iteration.
+    std::vector<Vector> F_per_icep_iteration;
+
+    /// The residual error *E* in each inverse iteration.
+    std::vector<double> E_per_icep_iteration;
+};
+
 /// A type used to describe the result of an equilibrium calculation
 /// @see ChemicalState
 struct EquilibriumResult
@@ -38,6 +59,9 @@ struct EquilibriumResult
 
     /// The boolean flag that indicates if smart equilibrium calculation was used.
     SmartEquilibriumResult smart;
+
+    /// The result details of an inverse equilibrium calculation.
+    InverseEquilibriumResult inverse;
 
     /// Apply an addition assignment to this instance
     auto operator+=(const EquilibriumResult& other) -> EquilibriumResult&;

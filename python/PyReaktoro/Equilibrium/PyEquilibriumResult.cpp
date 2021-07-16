@@ -28,10 +28,18 @@ void exportEquilibriumResult(py::module& m)
         .def_readwrite("succeeded", &SmartEquilibriumResult::succeeded)
         ;
 
+    py::class_<InverseEquilibriumResult>(m, "InverseEquilibriumResult")
+        .def_readwrite("fcep_iterations_per_icep_iteration", &InverseEquilibriumResult::fcep_iterations_per_icep_iteration)
+        .def_readwrite("x_per_icep_iteration", &InverseEquilibriumResult::x_per_icep_iteration)
+        .def_readwrite("F_per_icep_iteration", &InverseEquilibriumResult::F_per_icep_iteration)
+        .def_readwrite("E_per_icep_iteration", &InverseEquilibriumResult::E_per_icep_iteration)
+        ;
+
     py::class_<EquilibriumResult>(m, "EquilibriumResult")
         .def(py::init<>())
         .def_readwrite("optimum", &EquilibriumResult::optimum)
         .def_readwrite("smart", &EquilibriumResult::smart)
+        .def_readwrite("inverse", &EquilibriumResult::inverse)
         ;
 }
 

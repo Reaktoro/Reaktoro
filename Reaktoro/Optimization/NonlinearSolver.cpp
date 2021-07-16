@@ -188,7 +188,7 @@ struct NonlinearSolver::Impl
                 }
 
                 // Skip Armijo condition checking if we are in the 1st iteration
-                if(iterations == 1)
+                if(iterations == 1 || options.linesearch == false)
                     break;
 
                 // Calculate the new quadratic residual function

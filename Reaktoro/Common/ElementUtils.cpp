@@ -20,12 +20,11 @@
 // C++ includes
 #include <algorithm>
 #include <cassert>
-#include <map>
 #include <stdexcept>
 #include <string>
 using std::string;
-using std::map;
 using std::pair;
+using std::unordered_map;
 
 // Reaktoro includes
 #include <Reaktoro/Common/Exception.hpp>
@@ -47,7 +46,7 @@ const std::vector<std::string> elements =
 };
 
 /// The atomic weights of all known chemical elements (in units of g/mol)
-const std::map<std::string, double> atomicWeights =
+const std::unordered_map<std::string, double> atomicWeights =
 {
       {"H",   1.00794},    {"He",  4.002602}, {"Li",  6.941},     {"Be",  9.012182},  {"B",  10.811},    {"C",   12.0107}, {"N",   14.0067},   {"O",   15.9994},
       {"F",   18.9984032}, {"Ne",  20.1797},  {"Na",  22.98977},  {"Mg",  24.305},    {"Al", 26.981538}, {"Si",  28.0855}, {"P",   30.973761}, {"S",   32.065},
@@ -98,7 +97,7 @@ auto findMatchedParenthesis(string::iterator begin, string::iterator end) -> str
     return end;
 }
 
-auto parseFormula(string::iterator begin, string::iterator end, map<string, double>& result, double scalar) -> void
+auto parseFormula(string::iterator begin, string::iterator end, unordered_map<string, double>& result, double scalar) -> void
 {
     if(begin == end) return;
 
@@ -157,9 +156,9 @@ auto elements() -> std::vector<std::string>
     return internal::elements;
 }
 
-auto elements(std::string formula) -> std::map<std::string, double>
+auto elements(std::string formula) -> std::unordered_map<std::string, double>
 {
-    std::map<std::string, double> result;
+    std::unordered_map<std::string, double> result;
 
     internal::parseFormula(formula.begin(), formula.end(), result, 1.0);
 
@@ -181,7 +180,7 @@ auto atomicMass(std::string element) -> double
     return atomic_mass * gram_to_kilogram;
 }
 
-auto molarMass(const std::map<std::string, double>& elements) -> double
+auto molarMass(const std::unordered_map<std::string, double>& elements) -> double
 {
     double molar_mass = 0.0;
     for(const auto& pair : elements)
